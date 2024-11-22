@@ -36,13 +36,13 @@ model Event {
   recordingLink  String?  @db.VarChar(255)
   createdAt     DateTime?  @default(now())
   updatedAt     DateTime?  @updatedAt
-  speakerName String @db.VarChar(255)
-  speakerDesc String?
+  
 
   enrollments   Enrollment[]
   submissions   Submission[]
   schedules     Schedule[]
 }
+
 
 model Enrollment {
   enrollmentId    Int           @id @default(autoincrement())
@@ -93,6 +93,8 @@ model Schedule {
   eventId       Int
   time          DateTime
   location      String?     @db.VarChar(255)
+  speakerName String @db.VarChar(255)
+  speakerDesc String?
   createdAt     DateTime? @default(now())
   updatedAt     DateTime? @updatedAt
 
