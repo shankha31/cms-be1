@@ -60,7 +60,34 @@ export default async (req, res) => {
       console.error('Error renaming file:', renameErr);
       return res.status(500).json({ error: 'Error renaming file' });
     }
+    const user = await prisma.userProfile.findUnique({
+      where: {
+        userId: userId, // Replace with the actual ID
+      },
+    });
+    var user_name = user.firstName + " " + user.lastName;
+    var user_email = user.emailAddress;
+    console.log(user_email, user_name, user);
+    var msg = `Dear ${userName},
+We are excited to inform you that your submission has been successfully received! 
 
+Below are the details of your submission:
+    Submission Title: ${paperTitle[0]}
+    Abstract:
+    ${abstract[0]}
+    Event: ${eventName}
+
+Our team will review your submission thoroughly and share updates with you soon.
+
+Thank you for your valuable contribution to ${eventName}!
+
+Best regards,
+Web CMS`;
+    await sendMail(
+      user_email,
+      'Attendance Status Update',
+      msg
+    );
     return res.status(200).json({ fields, files });
   } else {
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });

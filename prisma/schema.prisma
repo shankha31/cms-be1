@@ -36,6 +36,8 @@ model Event {
   recordingLink  String?  @db.VarChar(255)
   createdAt     DateTime?  @default(now())
   updatedAt     DateTime?  @updatedAt
+  speakerName String @db.VarChar(255)
+  speakerDesc String?
 
   enrollments   Enrollment[]
   submissions   Submission[]
