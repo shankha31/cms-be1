@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `feedback` MODIFY `reviewDate` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3);
