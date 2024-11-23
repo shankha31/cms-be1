@@ -38,7 +38,8 @@ export default async (req, res) => {
 
     const [fields, files] = await form.parse(req);
     console.log(`${fields} ${files}`)
-    const { paperTitle, abstract, eventId } = fields;
+    const { paperTitle, abstract, eventId, expertiseId } = fields;
+    console.log(expertiseId);
     const paperUpload = files.paperUpload;
     const newItem = await prisma.submission.create({
       data: {
@@ -49,7 +50,17 @@ export default async (req, res) => {
         submissionDate: new Date().toISOString()
       }
     });
+    var expertise = expertiseId[0].split(",");
+
+    // const expertise = expertiseId.split(",").map((id) => parseInt(id.trim(), 10))
+    console.log(expertise);
     submissionId = newItem.submissionId;
+    await prisma.submissionExpertise.createMany({
+      data: expertise.map((exp) => ({
+        submissionId: submissionId,
+        expertiseId: parseInt(exp),
+      })),
+    });
 
     var newFilename = files?.paperUpload[0].newFilename
     var originalFilename = files?.paperUpload[0].originalFilename

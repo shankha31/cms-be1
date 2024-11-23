@@ -21,9 +21,9 @@ export default async function handler(req, res) {
         password,
         role,
         description,
-        expertise,
+        expertise
       } = req.body;
-
+      // console.log(req)
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -35,11 +35,19 @@ export default async function handler(req, res) {
           email,
           password: hashedPassword,
           role,
-          description,
-          expertise,
+          description
         },
       });
+      // Add expertise (if provided)
 
+
+      // Map user to expertise
+      await prisma.userExpertise.createMany({
+        data: expertise.map((exp) => ({
+          userId: user.userId,
+          expertiseId: exp,
+        })),
+      });
       return res.status(201).json({ message: "Registration Successful", user });
     } catch (error) {
       console.error("Error during registration:", error);

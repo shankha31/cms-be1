@@ -29,21 +29,34 @@ async function handler(req, res) {
       console.log(decoded)
 
       const user = await prisma.user.findUnique({
-        where: {
-          email: email,
-        }
+        where: { email },
+        include: { userExpertise: { select: { expertiseId: true } } },
       });
       if (!user) {
         return res.status(404).json({ error: "Participant not found" });
       }
+      const userExpertiseIds = user.userExpertise.map((ue) => ue.expertiseId);
       const userId = user.userId;
       console.log(userId)
       const submission = await prisma.submission.findMany({
         where: {
-          userId: {
-            not: userId
-          },
-        }
+          AND: [
+            { userId: { not: userId } }, // Exclude submissions by the user
+            {
+              submissionExpertise: {
+                some: {
+                  expertiseId: {
+                    in: userExpertiseIds, // Match expertise
+                  },
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          submissionExpertise: { include: { expertise: true } }, // Include expertise details
+          user: true, // Include user details for context
+        },
       });
 
       return res.status(200).json(submission);

@@ -26,8 +26,6 @@ CREATE TABLE `Event` (
     `recordingLink` VARCHAR(255) NULL,
     `createdAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NULL,
-    `speakerName` VARCHAR(255) NOT NULL,
-    `speakerDesc` VARCHAR(191) NULL,
 
     PRIMARY KEY (`eventId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -44,6 +42,35 @@ CREATE TABLE `Enrollment` (
     `updatedAt` DATETIME(3) NULL,
 
     PRIMARY KEY (`enrollmentId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Expertise` (
+    `expertiseId` INTEGER NOT NULL AUTO_INCREMENT,
+    `expertise` VARCHAR(100) NOT NULL,
+
+    UNIQUE INDEX `Expertise_expertise_key`(`expertise`),
+    PRIMARY KEY (`expertiseId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `UserExpertise` (
+    `userExpertiseId` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `expertiseId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `UserExpertise_userId_expertiseId_key`(`userId`, `expertiseId`),
+    PRIMARY KEY (`userExpertiseId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `SubmissionExpertise` (
+    `submissionExpertiseId` INTEGER NOT NULL AUTO_INCREMENT,
+    `submissionId` INTEGER NOT NULL,
+    `expertiseId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `SubmissionExpertise_submissionId_expertiseId_key`(`submissionId`, `expertiseId`),
+    PRIMARY KEY (`submissionExpertiseId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -81,6 +108,8 @@ CREATE TABLE `Schedule` (
     `eventId` INTEGER NOT NULL,
     `time` DATETIME(3) NOT NULL,
     `location` VARCHAR(255) NULL,
+    `speakerName` VARCHAR(255) NOT NULL,
+    `speakerDesc` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NULL,
 
@@ -118,6 +147,18 @@ ALTER TABLE `Enrollment` ADD CONSTRAINT `Enrollment_userId_fkey` FOREIGN KEY (`u
 
 -- AddForeignKey
 ALTER TABLE `Enrollment` ADD CONSTRAINT `Enrollment_eventId_fkey` FOREIGN KEY (`eventId`) REFERENCES `Event`(`eventId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `UserExpertise` ADD CONSTRAINT `UserExpertise_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`userId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `UserExpertise` ADD CONSTRAINT `UserExpertise_expertiseId_fkey` FOREIGN KEY (`expertiseId`) REFERENCES `Expertise`(`expertiseId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SubmissionExpertise` ADD CONSTRAINT `SubmissionExpertise_submissionId_fkey` FOREIGN KEY (`submissionId`) REFERENCES `Submission`(`submissionId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SubmissionExpertise` ADD CONSTRAINT `SubmissionExpertise_expertiseId_fkey` FOREIGN KEY (`expertiseId`) REFERENCES `Expertise`(`expertiseId`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Submission` ADD CONSTRAINT `Submission_eventId_fkey` FOREIGN KEY (`eventId`) REFERENCES `Event`(`eventId`) ON DELETE CASCADE ON UPDATE CASCADE;
