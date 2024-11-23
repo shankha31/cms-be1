@@ -22,6 +22,8 @@ feedbacks Feedback[] @relation("FeedbackEvaluator")
 userExpertise UserExpertise[]
 mentorshipsAsMentor MentorshipProgram[] @relation("Mentor")
 mentorshipsAsMentee MentorshipProgram[] @relation("Mentee")
+messages_messages_from_userTousers messages[]        @relation("messages_from_userTousers")
+messages_messages_to_userTousers   messages[]        @relation("messages_to_userTousers")
 }
 
 model Event {
@@ -141,15 +143,6 @@ updatedAt DateTime? @updatedAt
 mentor User @relation("Mentor", fields: [mentorId], references: [userId])
 mentee User @relation("Mentee", fields: [menteeId], references: [userId])
 }
-model messages {
-id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-from_user BigInt @db.UnsignedBigInt
-to_user BigInt @db.UnsignedBigInt
-content String @db.Text
-created_at DateTime? @db.Timestamp(0)
-updated_at DateTime? @db.Timestamp(0)
-
-}
 
 enum Role {
 user
@@ -184,13 +177,13 @@ cancelled
 
 model messages {
   id                              BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  from_user                       BigInt    @db.UnsignedBigInt
-  to_user                         BigInt    @db.UnsignedBigInt
+  from_user                       Int    
+  to_user                         Int    
   content                         String    @db.Text
   created_at                      DateTime? @db.Timestamp(0)
   updated_at                      DateTime? @db.Timestamp(0)
-  users_messages_from_userTousers users     @relation("messages_from_userTousers", fields: [from_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "messages_from_user_foreign")
-  users_messages_to_userTousers   users     @relation("messages_to_userTousers", fields: [to_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "messages_to_user_foreign")
+  users_messages_from_userTousers User     @relation("messages_from_userTousers", fields: [from_user], references: [userId], onDelete: Cascade, onUpdate: NoAction, map: "messages_from_user_foreign")
+  users_messages_to_userTousers   User     @relation("messages_to_userTousers", fields: [to_user], references: [userId], onDelete: Cascade, onUpdate: NoAction, map: "messages_to_user_foreign")
 
   @@index([from_user], map: "messages_from_user_foreign")
   @@index([to_user], map: "messages_to_user_foreign")
