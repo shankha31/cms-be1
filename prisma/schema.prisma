@@ -180,7 +180,7 @@ model messages {
   from_user                       Int    
   to_user                         Int    
   content                         String    @db.Text
-  created_at                      DateTime? @db.Timestamp(0)
+  created_at                      DateTime? @default(now())
   updated_at                      DateTime? @db.Timestamp(0)
   users_messages_from_userTousers User     @relation("messages_from_userTousers", fields: [from_user], references: [userId], onDelete: Cascade, onUpdate: NoAction, map: "messages_from_user_foreign")
   users_messages_to_userTousers   User     @relation("messages_to_userTousers", fields: [to_user], references: [userId], onDelete: Cascade, onUpdate: NoAction, map: "messages_to_user_foreign")
