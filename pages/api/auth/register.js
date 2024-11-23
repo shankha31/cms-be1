@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 
       // Map user to expertise
       await prisma.userExpertise.createMany({
-        data: expertise.map((exp) => ({
+        data: expertise?.map((exp) => ({
           userId: user.userId,
           expertiseId: exp,
         })),

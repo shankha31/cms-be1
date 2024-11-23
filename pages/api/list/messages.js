@@ -20,7 +20,6 @@ export default async (req, res) => {
             const user2 = req.body["user2"]; // Extract submissionId from query parameters
 
 
-            // Fetch feedbacks for the given submissionId and include evaluator (User) data
             const messages = await prisma.messages.findMany({
                 where: {
                     OR: [
@@ -40,7 +39,7 @@ export default async (req, res) => {
             return res.status(200).json({ messages });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ error: 'Error fetching feedbacks' });
+            return res.status(500).json({ error: 'Error fetching messages' });
         }
     } else {
         // Handle unsupported methods (only GET is allowed)

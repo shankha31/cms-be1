@@ -176,7 +176,7 @@ cancelled
 }
 
 model messages {
-  id                              BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  id                              Int    @id @default(autoincrement()) 
   from_user                       Int    
   to_user                         Int    
   content                         String    @db.Text

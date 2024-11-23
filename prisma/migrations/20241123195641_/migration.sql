@@ -21,6 +21,7 @@ CREATE TABLE `Event` (
     `description` VARCHAR(191) NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NOT NULL,
+    `image` TEXT NULL,
     `location` VARCHAR(255) NULL,
     `meetingLink` VARCHAR(255) NULL,
     `recordingLink` VARCHAR(255) NULL,
@@ -132,13 +133,15 @@ CREATE TABLE `MentorshipProgram` (
 
 -- CreateTable
 CREATE TABLE `messages` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `from_user` BIGINT UNSIGNED NOT NULL,
-    `to_user` BIGINT UNSIGNED NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `from_user` INTEGER NOT NULL,
+    `to_user` INTEGER NOT NULL,
     `content` TEXT NOT NULL,
     `created_at` TIMESTAMP(0) NULL,
     `updated_at` TIMESTAMP(0) NULL,
 
+    INDEX `messages_from_user_foreign`(`from_user`),
+    INDEX `messages_to_user_foreign`(`to_user`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -180,3 +183,9 @@ ALTER TABLE `MentorshipProgram` ADD CONSTRAINT `MentorshipProgram_mentorId_fkey`
 
 -- AddForeignKey
 ALTER TABLE `MentorshipProgram` ADD CONSTRAINT `MentorshipProgram_menteeId_fkey` FOREIGN KEY (`menteeId`) REFERENCES `User`(`userId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `messages` ADD CONSTRAINT `messages_from_user_foreign` FOREIGN KEY (`from_user`) REFERENCES `User`(`userId`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `messages` ADD CONSTRAINT `messages_to_user_foreign` FOREIGN KEY (`to_user`) REFERENCES `User`(`userId`) ON DELETE CASCADE ON UPDATE NO ACTION;
